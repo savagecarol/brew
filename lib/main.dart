@@ -1,5 +1,6 @@
 
 import 'package:brew/mapping.dart';
+import 'package:brew/scratchcard.dart';
 import 'package:flutter/material.dart';
 
 
@@ -17,8 +18,9 @@ class MyApp extends StatelessWidget
   Widget build(BuildContext context) {
     return new MaterialApp(
       title:'blog App',
-      theme: new ThemeData(primarySwatch: Colors.pink),
-      home: MappingPage(auth:Auth(),),
+      theme: new ThemeData.light(),
+       home: MappingPage(auth:Auth(),),
+      
     );
   }
 }

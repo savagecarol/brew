@@ -1,6 +1,9 @@
-import 'package:brew/register.dart';
+
+import 'package:brew/dialogbox.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'authentication.dart';
+import 'dialogbox.dart';
 
 
 // enum FormType
@@ -16,11 +19,15 @@ class LoginRegisterPage extends StatefulWidget
    LoginRegisterPage({
 this.auth,
 this.onSignedIn,
-this.onCreateAccount,
+this.onCreateAccount
+
+
    });
     final AuthImplementation auth;
   final VoidCallback onSignedIn;
   final VoidCallback onCreateAccount;
+
+
   @override
   _LoginRegisterPageState createState() => _LoginRegisterPageState();
 
@@ -29,7 +36,9 @@ this.onCreateAccount,
 
 class _LoginRegisterPageState extends State<LoginRegisterPage> 
 {
+  
 
+DialogBox dialogBox=new DialogBox();
 
  final formKey=new GlobalKey<FormState>();
 
@@ -60,13 +69,16 @@ class _LoginRegisterPageState extends State<LoginRegisterPage>
      {
        String userId=await widget.auth.signIn(_email,_password);
         print("$userId");
+         
+          widget.onSignedIn();
      }
     
       catch(e)
       {
+        dialogBox.information(context, "Error", e.toString());
         print("Error =" +e.toString());
       }
-      widget.onSignedIn();
+    
    }
  }
 
@@ -77,11 +89,23 @@ class _LoginRegisterPageState extends State<LoginRegisterPage>
        resizeToAvoidBottomPadding: false,
 
         appBar: new AppBar(
+           backgroundColor: Colors.white70,
+          elevation: 100,      
           automaticallyImplyLeading: false,
-          title:new Center(child:new Text("Brew")),
+            title:Padding(
+              padding: const EdgeInsets.only(top:15,bottom: 15),
+                          child: new Center(child:new Text("Brew",
+          style:GoogleFonts.dancingScript(
+              fontSize: 30,
+              color: Colors.grey[700],
+              fontStyle:FontStyle.normal,
+              fontWeight: FontWeight.bold,)),
+         
+        ),
+            ),
         ),
         body: new Container(
-          padding: const EdgeInsets.only(top:30,bottom:40,right: 50,left: 50,),
+          padding: const EdgeInsets.only(top:40,bottom:40,right: 50,left: 50,),
           margin: EdgeInsets.all(15.0),
           child:new Form
           (
@@ -102,8 +126,14 @@ List<Widget> createInputs()
   return
   [
     
-     Center(child:new Text("Login Page",style:new TextStyle(fontSize: 40.0,color: Colors.black)),),
-    SizedBox(height: 20),
+     Center(child:new Text("Login Page", style:GoogleFonts.poiretOne(
+
+              fontSize: 30,
+              color: Colors.grey[700],
+              fontStyle:FontStyle.normal,
+              fontWeight: FontWeight.bold,)),
+     ),
+    SizedBox(height: 25),
     logo(),
     SizedBox(height: 10.0),
     new TextFormField
@@ -124,7 +154,7 @@ List<Widget> createInputs()
       keyboardType:TextInputType.text,
       obscureText: true,
       decoration: new InputDecoration(
-        hintText:'Password'),
+        hintText:'Password',),
            validator: (value)
      {
         return value.isEmpty ? 'Password is required.': null; 
@@ -146,11 +176,11 @@ Widget logo()
     (
       tag:'hero',
         child:new CircleAvatar(
-          backgroundColor: Colors.pink,
+          backgroundColor: Colors.grey,
           radius:100,
           child:CircleAvatar(
             radius:95,
-          backgroundImage:NetworkImage('https://png.pngtree.com/png-clipart/20190922/original/pngtree-colorful-watercolor-frame-hologram-paint-splash-png-image_4769868.jpg'),
+          backgroundImage:AssetImage('assets/a.jpg'),
           ),
         
         ),
@@ -169,17 +199,28 @@ List<Widget> createButtons()
     Padding(
       padding: const EdgeInsets.only(right:60,left:60),
       child: new RaisedButton(
-        color: Colors.black12,
-        child:new Text("Login",style:new TextStyle(fontSize: 20.0,color: Colors.white)),
+        color: Colors.white70,
+        child:new Text("Login", style:GoogleFonts.poiretOne(
+              fontSize: 26,
+              color: Colors.grey[700],
+              fontStyle:FontStyle.normal,
+              fontWeight: FontWeight.bold,)
+        ),
         onPressed: validateAndSubmit,
+          shape: OutlineInputBorder(borderRadius: BorderRadius.circular(35),
+          borderSide: BorderSide.none),
                 elevation: 10,
                 ),
             ),
+            Padding(padding: const EdgeInsets.only(top:7)),
               new FlatButton(onPressed:(){ 
-               Navigator.of(context).push
-                  (new MaterialPageRoute(builder:(BuildContext context)=> RegisterPage()));
+               widget.onCreateAccount();
                             },
-                            child:new Text("Create An Account",style:new TextStyle(fontSize: 14.0))),
+                            child:new Text("Create An Account", style:GoogleFonts.lato(
+              fontSize: 16,
+              color: Colors.grey[700],
+              fontStyle:FontStyle.normal,
+              fontWeight: FontWeight.bold,))),
                         ];
   
 
@@ -189,4 +230,6 @@ List<Widget> createButtons()
                     
 }
 
+//  Navigator.of(context).push
+                  // (new MaterialPageRoute(builder:(BuildContext context)=> RegisterPage()));
 

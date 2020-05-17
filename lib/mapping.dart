@@ -1,7 +1,7 @@
 import 'package:brew/homepage.dart';
+import 'package:brew/register.dart';
 import 'package:flutter/material.dart';
 import 'login.dart';
-import'register.dart';
 import 'authentication.dart';
 
 class MappingPage extends StatefulWidget {
@@ -18,6 +18,7 @@ enum AuthStatus
   notSignedIn,
   signedIn,
   register,
+
 }
 
 class _MappingPageState extends State<MappingPage> {
@@ -35,9 +36,14 @@ void initState() {
     widget.auth.getCurrentuser().then((firebaseUserId)
     {
       setState(() {
-      
-        {
-        authStatus= firebaseUserId==null ? AuthStatus.notSignedIn : AuthStatus.signedIn;
+       {
+         if (firebaseUserId!=null){
+            authStatus=AuthStatus.signedIn;
+
+         }
+
+        // authStatus= firebaseUserId==null ? AuthStatus.notSignedIn : AuthStatus.signedIn;
+        
         } 
     
       });
@@ -52,31 +58,44 @@ void initState() {
     });
   }
   
-  void _signedOut()
+  void signedOut()
   {
     setState(() {
       authStatus=AuthStatus.notSignedIn;
     });
   }
-    void _registeration()
+
+  void _createAccount()
   {
-    setState(() {
+      setState(() {
+      authStatus=AuthStatus.register;
+    });
+
+  }
+  void _haveAccount()
+  {
+      setState(() {
       authStatus=AuthStatus.notSignedIn;
     });
+
   }
+
+
 
  
 
   @override
   Widget build(BuildContext context)
    {
-     switch (authStatus) {
+     switch (authStatus) 
+     {
       
        case AuthStatus.notSignedIn:
               return new LoginRegisterPage
       (
         auth:widget.auth,
         onSignedIn:_signedIn,
+         onCreateAccount:_createAccount,
      
               );
          
@@ -84,17 +103,15 @@ void initState() {
             return new HomePage
       (
         auth:widget.auth,
-        onSignedOut:_signedOut,
+        onSignedOut:signedOut,
               );      
-  
        case AuthStatus.register:
-            return new RegisterPage
-            (
-        auth:widget.auth,
-        onRegisteration:_registeration,
-
-              );
-      
+            return new RegisterPage(
+              auth:widget.auth,
+              onRegisteration: _signedIn,
+              onHaveAccount:_haveAccount,
+            );
+  
      }
           return null;
           }

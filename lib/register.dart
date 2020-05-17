@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'authentication.dart';
-import 'login.dart';
+import 'dialogbox.dart';
+
 
 
 
@@ -9,11 +11,12 @@ class RegisterPage extends StatefulWidget
 RegisterPage({
 this.auth,
 this.onRegisteration,
-this.onHaveAccount,
-   });
+this.onHaveAccount
+
+  });
     final AuthImplementation auth;
-   final VoidCallback onRegisteration;
-   final VoidCallback onHaveAccount;
+    final VoidCallback onRegisteration;
+final VoidCallback onHaveAccount;
 
 
 
@@ -23,19 +26,11 @@ this.onHaveAccount,
 
 class _RegisterPageState extends State<RegisterPage> 
 {
-
-
-
- final formKey=new GlobalKey<FormState>();
-
-
-
- String _email="";
- String _password="";
-
+DialogBox dialogBox =new DialogBox();
+String _email="";
+String _password="";
  bool validateAndSave()
   {
-
   final form =formKey.currentState;
     if(form.validate())
     {
@@ -48,26 +43,32 @@ class _RegisterPageState extends State<RegisterPage>
     }
  }
 
-  void validateAndSubmit() async
- {
-   if(validateAndSave())
+void validateAndSubmit()
+async {
+     if(validateAndSave())
    {
-     try
+          try
      {
        String userId=await widget.auth.signUp(_email,_password);
-       print("$userId");
+        print("$userId");
+
+         widget.onRegisteration();
      }
+    
       catch(e)
       {
+          dialogBox.information(context,"Error",e.toString());
         print("Error =" +e.toString());
       }
-      widget.onRegisteration();
+      
+    
    }
- }
+
+}
 
 
 
-
+ final formKey=new GlobalKey<FormState>();
   @override
   Widget build(BuildContext context) {
     
@@ -75,11 +76,23 @@ class _RegisterPageState extends State<RegisterPage>
        resizeToAvoidBottomPadding: false,
 
         appBar: new AppBar(
+           backgroundColor: Colors.white70,
+          elevation: 100,      
           automaticallyImplyLeading: false,
-          title:new Center(child:new Text("Brew")),
+            title:Padding(
+              padding: const EdgeInsets.only(top:15,bottom: 15),
+                          child: new Center(child:new Text("Brew",
+          style:GoogleFonts.dancingScript(
+              fontSize: 30,
+              color: Colors.grey[700],
+              fontStyle:FontStyle.normal,
+              fontWeight: FontWeight.bold,)),
+         
+        ),
+            ),
         ),
         body: new Container(
-          padding: const EdgeInsets.only(top:30,bottom:40,right: 50,left: 50,),
+          padding: const EdgeInsets.only(top:40,bottom:40,right: 50,left: 50,),
           margin: EdgeInsets.all(15.0),
           child:new Form
           (
@@ -100,8 +113,12 @@ List<Widget> createInputs()
   return
   [
     
-     Center(child:new Text("Register Page",style:new TextStyle(fontSize: 40.0,color: Colors.black)),),
-    SizedBox(height: 20),
+     Center(child:new Text("Register Page", style:GoogleFonts.poiretOne(
+              fontSize: 30,
+              color: Colors.grey[700],
+              fontStyle:FontStyle.normal,
+              fontWeight: FontWeight.bold,)),),
+    SizedBox(height: 25),
     logo(),
     SizedBox(height: 10.0),
     new TextFormField
@@ -143,11 +160,11 @@ Widget logo()
     (
       tag:'hero',
         child:new CircleAvatar(
-          backgroundColor: Colors.pink,
+          backgroundColor: Colors.grey,
           radius:100,
           child:CircleAvatar(
             radius:95,
-          backgroundImage:NetworkImage('https://png.pngtree.com/png-clipart/20190922/original/pngtree-colorful-watercolor-frame-hologram-paint-splash-png-image_4769868.jpg'),
+          backgroundImage:AssetImage('assets/a.jpg'),
           ),
         
         ),
@@ -166,16 +183,27 @@ List<Widget> createButtons()
     Padding(
       padding: const EdgeInsets.only(right:60,left:60),
       child: new RaisedButton(
-        color: Colors.black12,
-        child:new Text("register ",style:new TextStyle(fontSize: 20.0,color: Colors.white)),
+        color: Colors.white70,
+        child:new Text("Register ", style:GoogleFonts.poiretOne(
+              fontSize: 26,
+              color: Colors.grey[700],
+              fontStyle:FontStyle.normal,
+              fontWeight: FontWeight.bold,)),
         onPressed: validateAndSubmit,
                 elevation: 10,
+                 shape: OutlineInputBorder(borderRadius: BorderRadius.circular(35),
+          borderSide: BorderSide.none),
                 ),
             ),
-              new FlatButton(onPressed:(){ 
-                     Navigator.of(context).push
-                  (new MaterialPageRoute(builder:(BuildContext context)=> LoginRegisterPage()));},
-                            child:new Text("Have An Account",style:new TextStyle(fontSize: 14.0))),
+            Padding(padding: EdgeInsets.only(top:7)),
+              new FlatButton(onPressed:(){
+                widget.onHaveAccount();
+                                                        },
+                            child:new Text("Have An Account", style:GoogleFonts.lato(
+              fontSize: 16,
+              color: Colors.grey[700],
+              fontStyle:FontStyle.normal,
+              fontWeight: FontWeight.bold,))),
                         ];
   
 
